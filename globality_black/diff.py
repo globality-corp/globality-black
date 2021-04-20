@@ -1,8 +1,10 @@
 import tempfile
+from pathlib import Path
+
 import pexpect
 
 
-def git_diff(input_path: str, output_code: str) -> str:
+def git_diff(input_path: Path, output_code: str) -> str:
     with tempfile.NamedTemporaryFile(mode="w+t") as temp_file:
         temp_file.writelines(output_code)
         temp_file.seek(0)
