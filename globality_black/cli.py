@@ -63,8 +63,6 @@ def main(path, check, diff, verbose):
     if diff:
         check = True
     if path.is_dir():
-        if diff:
-            raise BlackError("diff can be used only with single script not directories")
         paths = list(path.glob("**/*.py"))
     else:
         paths = [path]
@@ -126,7 +124,8 @@ def process_path(
     is_modified = False
     input_code = path.read_text()
     black_mode = get_black_mode(path)
-
+    output = ""
+    diff_output = ""
     try:
         output_code = reformat_text(input_code, black_mode)
     except BlackError as e:
@@ -137,7 +136,7 @@ def process_path(
 
     if check_only_mode and is_modified:
         if diff_mode:
-            git_diff(path, output_code)
+            diff_output = git_diff(path, output_code)
         initial_str = "Would reformat"
     elif not check_only_mode and is_modified:
         initial_str = "Reformatted"
@@ -146,8 +145,12 @@ def process_path(
 
     if not check_only_mode:
         path.write_text(output_code)
-
-    return is_modified, False, f"{initial_str} {path}"
+    if diff_mode:
+        # if diff we add the diff report to the reformat message
+        output = diff_output + "\n" + f"{initial_str} {path}"
+    else:
+        output = f"{initial_str} {path}"
+    return is_modified, False, output
 
 
 if __name__ == "__main__":
