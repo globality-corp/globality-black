@@ -54,7 +54,7 @@ def main(path, check, diff, verbose):
     \b
     * diff:
         If --diff do not modify the files and display the changes induced by reformatting
-        shown
+        --diff forces --check to be passed
 
     """
 
