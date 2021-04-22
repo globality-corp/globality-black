@@ -14,15 +14,17 @@ from globality_black.constants import (
     OH_NO_STRING,
 )
 from globality_black.reformat_text import BlackError, reformat_text
+from globality_black.diff import git_diff
 
 
 @click.command()
 @click.argument("path", type=click.Path(readable=True, writable=True, exists=True))
 @click.option("--check/--no-check", type=bool, default=False)
 @click.option("--verbose/--no-verbose", type=bool, default=False)
+@click.option("--diff/--no-diff", type=bool, default=False)
 # characters \b needed to avoid click reformatting
 # see https://click.palletsprojects.com/en/7.x/documentation/#preventing-rewrapping
-def main(path, check, verbose):
+def main(path, check, diff, verbose):
     """
     Run globality-black for a given path
 
@@ -49,18 +51,24 @@ def main(path, check, verbose):
         If --verbose not passed (or --no-verbose), only files with errors or to be modified are
         shown
 
+    \b
+    * diff:
+        If --diff do not modify the files and display the changes induced by reformatting
+        --diff forces --check to be passed
+
     """
 
     path = Path(path)
     exit_code = 0
-
+    if diff:
+        check = True
     if path.is_dir():
         paths = list(path.glob("**/*.py"))
     else:
         paths = [path]
 
     reformatted_count, failed_count = 0, 0
-    process_path_with_check = partial(process_path, check_only_mode=check)
+    process_path_with_check = partial(process_path, check_only_mode=check, diff_mode=diff)
 
     parallelize = len(paths) > NUM_FILES_TO_ENABLE_PARALLELIZATION
     if parallelize:
@@ -107,6 +115,7 @@ def main(path, check, verbose):
 def process_path(
     path: Path,
     check_only_mode: bool = False,
+    diff_mode: bool = False,
 ) -> Tuple[bool, bool, str]:
     """
     For each path compute `is_modified`, `is_failed`, and `message` to be used in main
@@ -115,7 +124,8 @@ def process_path(
     is_modified = False
     input_code = path.read_text()
     black_mode = get_black_mode(path)
-
+    output = ""
+    diff_output = ""
     try:
         output_code = reformat_text(input_code, black_mode)
     except BlackError as e:
@@ -125,6 +135,8 @@ def process_path(
         is_modified = True
 
     if check_only_mode and is_modified:
+        if diff_mode:
+            diff_output = git_diff(path, output_code)
         initial_str = "Would reformat"
     elif not check_only_mode and is_modified:
         initial_str = "Reformatted"
@@ -133,8 +145,12 @@ def process_path(
 
     if not check_only_mode:
         path.write_text(output_code)
-
-    return is_modified, False, f"{initial_str} {path}"
+    if diff_mode:
+        # if diff we add the diff report to the reformat message
+        output = diff_output + "\n" + f"{initial_str} {path}"
+    else:
+        output = f"{initial_str} {path}"
+    return is_modified, False, output
 
 
 if __name__ == "__main__":
