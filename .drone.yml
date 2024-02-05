@@ -72,8 +72,8 @@ steps:
       - pip install -U pip==21.3.1
       - pip install awscli
       - export CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN
-      - echo "I can run this test, but i wont because it causes errors, Please Fix Me !!!"
       # - ./entrypoint.sh test
+      - echo "I can run this test, but i wont because it causes errors, Please Fix Me !!!"
 
 
   - name: release-python-library-codeartifact
@@ -96,9 +96,9 @@ steps:
       - export CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN
       - python setup.py sdist bdist_wheel
       - twine upload --repository codeartifact dist/globality-black-$${version}.tar.gz --config-file .pypirc
-    # when:
-    #   branch:
-    #     - master
+    when:
+      branch:
+        - master
 
 ---
 kind: pipeline
