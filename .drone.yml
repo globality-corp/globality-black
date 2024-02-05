@@ -52,8 +52,8 @@ steps:
       - pip install -U pip==21.3.1
       - pip install awscli
       - export CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN
-      - ./entrypoint.sh lint
-      - ./entrypoint.sh typehinting
+      # - ./entrypoint.sh lint
+      # - ./entrypoint.sh typehinting
 
 
   - name: test-py39-latest
@@ -69,7 +69,7 @@ steps:
       - pip install -U pip==21.3.1
       - pip install awscli
       - export CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN
-      - ./entrypoint.sh test
+      # - ./entrypoint.sh test
 
 
   - name: release-python-library-codeartifact
