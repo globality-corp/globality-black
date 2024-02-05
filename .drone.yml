@@ -112,7 +112,7 @@ steps:
     commands:
       - echo "Dummy step to trigger dependency-validation"
 
-# ARTIFACTORY SECRETS
+# ARTIFACTORY SECRETS.
 ---
 kind: secret
 name: SONARQUBE_TOKEN
