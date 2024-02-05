@@ -91,7 +91,7 @@ steps:
       - export version=$(cat .bumpversion.cfg | awk '/current_version / {print $3}')
       - export CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN
       - python setup.py sdist bdist_wheel
-      - twine upload --repository codeartifact dist/${NAME}-${version}* --verbose
+      - twine upload --repository codeartifact dist/globality-black-$${version}.tar.gz --config-file .pypirc
     # when:
     #   branch:
     #     - master
