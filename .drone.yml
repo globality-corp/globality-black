@@ -59,7 +59,7 @@ steps:
       - ./entrypoint.sh typehinting
 
 
-  - name: test-py39-latest
+  - name: test
     image: python:3.9-slim
     environment:
       AWS_ACCOUNT_ID:
@@ -86,9 +86,10 @@ steps:
       AWS_ACCOUNT_ID:
         from_secret: AWS_ACCOUNT_ID
     depends_on:
+      - test
+      - lint-and-type-check
       - create-pypirc-file-for-codeartifact
     commands:
-      - cat .pypirc
       - pip install -U pip==23.2.1
       - pip install --quiet awscli twine==4.0.2 packaging==23.1 bumpversion
       - bumpversion minor --allow-dirty --new-version `/bin/date +%Y.%-V`.${DRONE_BUILD_NUMBER}
