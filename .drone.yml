@@ -72,7 +72,7 @@ steps:
       - pip install -U pip==21.3.1
       - pip install awscli
       - export CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN
-      # - ./entrypoint.sh test
+      - ./entrypoint.sh test
       - echo "I can run this test, but i wont because it causes errors, Please Fix Me !!!"
 
 
