@@ -1,15 +1,12 @@
- -1,9 +1,9 @@
+ -1,6 +1,7 @@
  import pandas as pd
- 
 +
+ 
  def foo(df: pd.DataFrame, graph):
--
+ 
      df = (
          df
- 
-         # turn predictions to bool
-         .assign(predictions=df.predictions.astype(bool))
-@@ -27,27 +27,16 @@
+@@ -27,27 +28,16 @@
      )
  
      df = df.assign(
@@ -37,7 +34,7 @@
          predictions5=df.predictions.astype(bool),
      )
  
-@@ -75,26 +64,26 @@
+@@ -75,23 +65,24 @@
      )
  
  
@@ -69,13 +66,10 @@
 +
  
  class A:
--
+ 
      def foo_a():
          return bool(
-             cls.get_dataframe(x, y)
- 
-             # this is a comment in
-@@ -125,22 +114,19 @@
+@@ -125,22 +116,19 @@
  
  
  def func(arg):

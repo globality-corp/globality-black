@@ -25,7 +25,7 @@
 
 if [ "$1" = "test" ]; then
    # Install standard test dependencies; YMMV
-   pip --quiet install \
+   pip install \
        .[test] pytest pytest-cov PyHamcrest
    pytest
 elif [ "$1" = "lint" ]; then
