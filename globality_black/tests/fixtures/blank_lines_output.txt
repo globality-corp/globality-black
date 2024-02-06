@@ -2,6 +2,7 @@ import pandas as pd
 
 
 def foo(df: pd.DataFrame, graph):
+
     df = (
         df
 
@@ -82,6 +83,7 @@ def foo():
 
 
 class A:
+
     def foo_a():
         return bool(
             cls.get_dataframe(x, y)
