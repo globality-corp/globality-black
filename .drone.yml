@@ -120,13 +120,6 @@ steps:
 # ARTIFACTORY SECRETS.
 ---
 kind: secret
-name: SONARQUBE_TOKEN
-get:
-  path: secrets/dev/drone
-  name: DRONE_SONARQUBE_TOKEN
-
----
-kind: secret
 name: AWS_ACCOUNT_ID
 get:
   path: secrets/dev/drone
